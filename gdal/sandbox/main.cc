@@ -1,17 +1,14 @@
 #include <iostream>
 
-#include "gdal.h"
-#include "cpl_conv.h"
+#include "gdal_sapi.sapi.h"
 
 int main() {
-    GDALDatasetH hDataset;
-    GDALAllRegister();
-    const char* pszFilename = "";
-    hDataset = GDALOpen(pszFilename, GA_ReadOnly);
-
-    if (hDataset == NULL) {
-        std::cout << "File not found" << std::endl;
-    }
+    gdalSandbox sandbox;
+    sandbox.Init().IgnoreError();
+    gdalApi api(&sandbox);
+    std::string filename = "test";
+    sapi::v::CStr s(filename.data());
+    auto res = api.GDALOpen(s.PtrBefore(), GDALAccess::GA_ReadOnly);
 
     return 0;
 }
