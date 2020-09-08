@@ -8,7 +8,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(SAPI_ROOT "" CACHE PATH "Path to the Sandboxed API source tree")
 #   cmake .. -G Ninja -DSAPI_ROOT=$HOME/sapi_root
 
-
 set(SAPI_ENABLE_EXAMPLES OFF CACHE BOOL "")
 set(SAPI_ENABLE_TESTS OFF CACHE BOOL "")
 add_subdirectory("${SAPI_ROOT}"
@@ -25,9 +24,12 @@ target_link_libraries(libgdal INTERFACE
     sqlite3 tiff z pthread m rt dl curl)
 
 add_sapi_library(gdal_sapi
-    FUNCTIONS GDALOpen
+    FUNCTIONS GDALOpen GDALAllRegister GDALGetDatasetDriver 
+        GDALGetDriverShortName GDALGetDriverLongName GDALGetRasterXSize 
+        GDALGetRasterYSize GDALGetRasterCount GDALGetProjectionRef
+        GDALOpenEx GDALInfo
     
-    INPUTS "../gcore/gdal.h"
+    INPUTS "../gcore/gdal.h" "../apps/gdalinfo_bin.cpp" "../apps/gdalinfo_lib.cpp"
     LIBRARY libgdal
     LIBRARY_NAME gdal
     
@@ -44,5 +46,5 @@ add_executable(main
 
 target_link_libraries(main
     gdal_sapi
-    sapi::sapi
+    sapi::sapi    
 )
