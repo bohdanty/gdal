@@ -24,7 +24,9 @@ target_link_libraries(libgdal INTERFACE
     sqlite3 tiff z pthread m rt dl curl)
 
 add_sapi_library(gdal_sapi
-    FUNCTIONS GDALOpen GDALAllRegister GDALGetDatasetDriver 
+    FUNCTIONS GDALOpen GDALAllRegister GDALGetDatasetDriver GDALCreate GDALGetDriverByName
+              GDALGetRasterBand GDALSetProjection GDALSetGeoTransform  
+              GDALSetRasterNoDataValue GDALRasterIO GDALClose
         GDALGetDriverShortName GDALGetDriverLongName GDALGetRasterXSize 
         GDALGetRasterYSize GDALGetRasterCount GDALGetProjectionRef
         GDALOpenEx GDALInfo
@@ -47,4 +49,22 @@ add_executable(main
 target_link_libraries(main
     gdal_sapi
     sapi::sapi    
+)
+
+add_library(data_retriever STATIC
+  get_raster_data.h get_raster_data.cc
+)
+
+target_link_libraries(data_retriever
+  libgdal
+)
+
+add_executable(raster_to_gtiff
+    raster_to_gtiff.cc
+)
+
+target_link_libraries(raster_to_gtiff
+    data_retriever
+    gdal_sapi
+    sapi::sapi
 )

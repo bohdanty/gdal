@@ -51,6 +51,16 @@ int main() {
 
     std::string gdal_info = sandbox.GetCString(info_str_ptr).value();
     std::cout << gdal_info << std::endl;
+    
+    auto hBand = api.GDALGetRasterBand(&hDataset, 1);
+
+    std::cout << hBand.value() << std::endl;
+
+    std::string driver_name = "GTiff";
+    sapi::v::CStr driver_name_ptr(driver_name.data());
+    auto driver = api.GDALGetDriverByName(driver_name_ptr.PtrBefore());
+    sapi::v::RemotePtr driver_ptr(driver.value());
+    //auto create_handle =  
 
     return 0;
 }
